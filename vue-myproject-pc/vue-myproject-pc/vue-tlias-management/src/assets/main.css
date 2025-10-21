@@ -1,0 +1,56 @@
+* {
+  margin: 0px;
+}
+
+/* 统一滚动条设置 */
+
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;  /* 确保最小高度为视口高度 */
+  font-family: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "微软雅黑", "Helvetica Neue", Arial, sans-serif;
+}
+
+/* Webkit 浏览器（Chrome、Safari、Edge）滚动条样式 */
+::-webkit-scrollbar {
+  width: 8px;  /* 滚动条宽度 */
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;  /* 滚动条轨道背景 */
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #c1c1c1;  /* 滚动条滑块颜色 */
+  border-radius: 4px;
+  transition: background 0.2s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;  /* 滚动条滑块悬停颜色 */
+}
+
+/* 确保所有页面容器都有统一的最小高度 */
+.page-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 统一页面内容区域样式 */
+.main-content {
+  flex: 1;
+  min-height: calc(100vh - 90px);  /* 减去导航栏高度 */
+}
+
+/* 统一导航栏样式 */
+.fixed-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+  background: white;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}

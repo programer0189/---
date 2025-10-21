@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.webproject.mapper.PostMapper">
+
+    <!-- 根据帖子ID查询帖子列表 -->
+    <select id="getByPostId" resultType="com.webproject.pojo.Post">
+        SELECT p.*, u.username, u.image as userAvatar
+        FROM posts p
+        LEFT JOIN user u ON p.user_id = u.id
+        WHERE p.id = #{postId} AND p.judge_status = 1
+    </select>
+
+    <!-- 根据ID查询单个帖子 -->
+    <select id="getById" resultType="com.webproject.pojo.Post">
+        SELECT p.*, u.username, u.image as userAvatar
+        FROM posts p
+        LEFT JOIN user u ON p.user_id = u.id
+        WHERE p.id = #{id} AND p.judge_status = 1
+    </select>
+
+    <!-- 根据类型查询帖子列表 -->
+    <select id="getByType" resultType="com.webproject.pojo.Post">
+        SELECT p.*, u.username, u.image as userAvatar
+        FROM posts p
+        LEFT JOIN user u ON p.user_id = u.id
+        WHERE p.type = #{type} AND p.judge_status = 1
+        ORDER BY p.create_time DESC
+    </select>
+
+    <!-- 根据用户ID查询帖子列表 -->
+    <select id="getByUserId" resultType="com.webproject.pojo.Post">
+        SELECT p.*, u.username, u.image as userAvatar
+        FROM posts p
+        LEFT JOIN user u ON p.user_id = u.id
+        WHERE p.user_id = #{userId}
+        ORDER BY p.create_time DESC
+    </select>
+
+    <!-- 管理员查询所有帖子（不需要审核状态条件） -->
+    <select id="getAllPostsForAdmin" resultType="com.webproject.pojo.Post">
+        SELECT p.*, u.username, u.image as userAvatar
+        FROM posts p
+        LEFT JOIN user u ON p.user_id = u.id
+        ORDER BY p.create_time DESC
+    </select>
+
+    <!-- 新增帖子 -->
+    <insert id="insert" parameterType="com.webproject.pojo.Post" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO posts (user_id, type, title, content, status, create_time, update_time, judge_status, image)
+        VALUES (#{userId}, #{type}, #{title}, #{content}, #{status}, #{createTime}, #{updateTime}, #{judgeStatus}, #{image})
+    </insert>
+
+    <!-- 更新帖子 -->
+    <update id="update" parameterType="com.webproject.pojo.Post">
+        UPDATE posts
+        <set>
+            <if test="title != null and title != ''">
+                title = #{title},
+            </if>
+            <if test="content != null and content != ''">
+                content = #{content},
+            </if>
+            <if test="type != null">
+                type = #{type},
+            </if>
+            <if test="status != null">
+                status = #{status},
+            </if>
+            <if test="image != null">
+                image = #{image},
+            </if>
+            <if test="judgeStatus != null">
+                judge_status = #{judgeStatus},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime},
+            </if>
+        </set>
+        WHERE id = #{id}
+    </update>
+    <!-- 删除帖子 -->
+    <delete id="deleteById">
+        DELETE FROM posts WHERE id = #{id}
+    </delete>
+
+    <!-- 根据用户ID删除所有帖子 -->
+    <delete id="deleteByUserId">
+        DELETE FROM posts WHERE user_id = #{userId}
+    </delete>
+
+    <!-- 根据用户ID查询帖子数量 -->
+    <select id="countByUserId" resultType="java.lang.Integer">
+        SELECT COUNT(*) FROM posts WHERE user_id = #{userId} AND judge_status = 1
+    </select>
+
+    <!-- 根据类型查询帖子数量 -->
+    <select id="countByType" resultType="java.lang.Integer">
+        SELECT COUNT(*) FROM posts WHERE type = #{type} AND judge_status = 1
+    </select>
+
+    <!-- 获取待审核的帖子 -->
+    <select id="getPendingPosts" resultType="com.webproject.pojo.Post">
+        SELECT p.*, u.username, u.image as userAvatar
+        FROM posts p
+        LEFT JOIN user u ON p.user_id = u.id
+        WHERE p.judge_status = #{judgeStatus}
+        ORDER BY p.create_time ASC
+    </select>
+    
+
+
+    <!-- 更新帖子审核状态 -->
+    <update id="updateJudgeStatus" parameterType="com.webproject.pojo.Post">
+        UPDATE posts
+        <set>
+            <if test="judgeStatus != null">
+                judge_status = #{judgeStatus},
+            </if>
+            <if test="judgerId != null">
+                judger_id = #{judgerId},
+            </if>
+            <if test="judgeTime != null">
+                judge_time = #{judgeTime},
+            </if>
+            <if test="rejectReason != null and rejectReason != ''">
+                reject_reason = #{rejectReason},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime},
+            </if>
+        </set>
+        WHERE id = #{id}
+    </update>
+    
+    <!-- 获取各状态帖子数量统计 -->
+    <select id="getPostStatusCount" resultType="java.util.Map">
+        SELECT 
+            SUM(CASE WHEN judge_status = 0 THEN 1 ELSE 0 END) as pending,
+            SUM(CASE WHEN judge_status = 1 THEN 1 ELSE 0 END) as approved,
+            SUM(CASE WHEN judge_status = 2 THEN 1 ELSE 0 END) as rejected,
+            SUM(CASE WHEN judge_status = 3 THEN 1 ELSE 0 END) as deleted,
+            COUNT(*) as total
+        FROM posts
+    </select>
+    
+    <!-- 获取帖子数据统计 -->
+    <select id="getPostData" resultType="java.util.Map">
+        SELECT 
+            COUNT(*) as totalPosts,
+            SUM(CASE WHEN DATE(create_time) = CURDATE() THEN 1 ELSE 0 END) as todayNewPosts,
+            SUM(CASE WHEN DATE(create_time) = DATE_SUB(CURDATE(), INTERVAL 7 DAY) THEN 1 ELSE 0 END) as weekNewPosts,
+            SUM(CASE WHEN DATE(create_time) = DATE_SUB(CURDATE(), INTERVAL 30 DAY) THEN 1 ELSE 0 END) as monthNewPosts,
+            SUM(CASE WHEN judge_status = 0 THEN 1 ELSE 0 END) as pendingPosts,
+            SUM(CASE WHEN judge_status = 1 THEN 1 ELSE 0 END) as approvedPosts,
+            SUM(CASE WHEN judge_status = 2 THEN 1 ELSE 0 END) as rejectedPosts,
+            SUM(CASE WHEN judge_status = 3 THEN 1 ELSE 0 END) as deletedPosts,
+            SUM(CASE WHEN type = 1 THEN 1 ELSE 0 END) as confessionPosts,
+            SUM(CASE WHEN type = 2 THEN 1 ELSE 0 END) as expressPosts,
+            SUM(CASE WHEN type = 3 THEN 1 ELSE 0 END) as studyPosts,
+            SUM(CASE WHEN type = 4 THEN 1 ELSE 0 END) as activityPosts,
+            SUM(CASE WHEN type = 5 THEN 1 ELSE 0 END) as lostFoundPosts,
+            SUM(CASE WHEN type = 6 THEN 1 ELSE 0 END) as chatPosts
+        FROM posts
+    </select>
+
+</mapper>

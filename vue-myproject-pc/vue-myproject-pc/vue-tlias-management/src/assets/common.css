@@ -1,0 +1,131 @@
+/* 通用页面布局样式 */
+/* 确保所有页面都有一致的滚动条和布局 */
+
+/* 全局滚动条设置 */
+html {
+  overflow-y: scroll;  /* 强制显示垂直滚动条，避免页面跳动 */
+  scrollbar-width: thin;  /* Firefox 滚动条宽度 */
+  scrollbar-color: #c1c1c1 #f1f1f1;  /* Firefox 滚动条颜色 */
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;  /* 确保最小高度为视口高度 */
+  font-family: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "微软雅黑", "Helvetica Neue", Arial, sans-serif;
+  background: #f5f5f7;
+}
+
+/* Webkit 浏览器滚动条样式 */
+::-webkit-scrollbar {
+  width: 8px;  /* 滚动条宽度 */
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;  /* 滚动条轨道背景 */
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #c1c1c1;  /* 滚动条滑块颜色 */
+  border-radius: 4px;
+  transition: background 0.2s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;  /* 滚动条滑块悬停颜色 */
+}
+
+/* 统一页面容器样式 */
+.page-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: #f5f5f7;
+}
+
+/* 统一页面内容区域样式 */
+.page-content {
+  flex: 1;
+  min-height: calc(100vh - 90px - 60px); /* 减去导航栏和页脚高度 */
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+/* 统一页面底部样式 */
+.page-footer {
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+  color: rgba(255, 255, 255, 0.9);
+  padding: 25px;
+  text-align: center;
+  box-shadow: 0 -4px 20px rgba(15, 23, 42, 0.1);
+}
+
+/* 统一卡片容器样式 */
+.card-container {
+  background: white;
+  border-radius: 15px;
+  box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  margin-bottom: 20px;
+  min-height: 200px; /* 确保最小高度 */
+}
+
+/* 统一表单样式 */
+.form-container {
+  max-width: 800px;
+  margin: 0 auto;
+  background: white;
+  border-radius: 15px;
+  box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+  padding: 30px;
+}
+
+/* 统一按钮样式 */
+.btn-primary {
+  background: linear-gradient(45deg, #007aff, #5856d6);
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(0, 122, 255, 0.4);
+}
+
+/* 统一输入框样式 */
+.input-field {
+  width: 100%;
+  padding: 12px 16px;
+  border: 2px solid #e1e5e9;
+  border-radius: 8px;
+  font-size: 16px;
+  transition: all 0.3s ease;
+}
+
+.input-field:focus {
+  outline: none;
+  border-color: #007aff;
+  box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.1);
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .page-content {
+    padding: 15px;
+  }
+  
+  .card-container {
+    padding: 15px;
+  }
+  
+  .form-container {
+    padding: 20px;
+    margin: 0 15px;
+  }
+}

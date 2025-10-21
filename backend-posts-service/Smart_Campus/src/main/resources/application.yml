@@ -1,0 +1,26 @@
+#配置数据库的连接信息
+spring:
+    datasource:
+      url: jdbc:mysql://localhost:3306/school-chat
+      username: root
+      password: your_password_here
+      driver-class-name: com.mysql.cj.jdbc.Driver
+
+# 阿里云OSS配置
+aliyun:
+  oss:
+    endpoint: https://oss-cn-beijing.aliyuncs.com
+    access-key-id: your_access_key_id_here
+    access-key-secret: your_access_key_secret_here
+    bucket-name: your_bucket_name_here
+    region: cn-beijing
+
+mybatis:
+  configuration:
+      log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+      map-underscore-to-camel-case: true
+      mapper-locations: classpath:mapper/*.xml
+      type-aliases-package: com.webproject.pojo
+
+server:
+  port: 9100  # 修改为你想要的端口号

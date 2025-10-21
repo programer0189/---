@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.webproject.mapper.UserMapper">
+
+    <!-- 登录查询（保留原有） -->
+    <select id="selectByUsernameAndPassword" resultType="com.webproject.pojo.User">
+        SELECT * FROM user WHERE username = #{username} AND password = #{password}
+    </select>
+
+    <!-- 新增用户 -->
+    <insert id="insert" parameterType="com.webproject.pojo.User" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO user (username, password, phone, role, image, gender, create_time, update_time)
+        VALUES (#{username}, #{password}, #{phone}, #{role}, #{image}, #{gender}, #{createTime}, #{updateTime})
+    </insert>
+
+    <!-- 根据ID查询用户 -->
+    <select id="selectById" resultType="com.webproject.pojo.User">
+        SELECT * FROM user WHERE id = #{id}
+    </select>
+
+    <!-- 查询所有用户 -->
+    <select id="selectAll" resultType="com.webproject.pojo.User">
+        SELECT * FROM user ORDER BY create_time DESC
+    </select>
+
+    <!-- 更新用户信息 -->
+    <update id="update" parameterType="com.webproject.pojo.User">
+        UPDATE user
+        <set>
+            <if test="username != null and username != ''">
+                username = #{username},
+            </if>
+            <if test="password != null and password != ''">
+                password = #{password},
+            </if>
+            <if test="phone != null and phone != ''">
+                phone = #{phone},
+            </if>
+            <if test="role != null and role != ''">
+                role = #{role},
+            </if>
+            <if test="image != null">
+                image = #{image},
+            </if>
+            <if test="gender != null and gender != ''">
+                gender = #{gender},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime},
+            </if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <!-- 删除用户 -->
+    <delete id="deleteById">
+        DELETE FROM user WHERE id = #{id}
+    </delete>
+
+    <!-- 根据用户名查询用户 -->
+    <select id="selectByUsername" resultType="com.webproject.pojo.User">
+        SELECT * FROM user WHERE username = #{username}
+    </select>
+
+    <!-- 根据手机号查询用户 -->
+    <select id="selectByPhone" resultType="com.webproject.pojo.User">
+        SELECT * FROM user WHERE phone = #{phone}
+    </select>
+
+    <!-- 根据角色查询用户 -->
+    <select id="selectByRole" resultType="com.webproject.pojo.User">
+        SELECT * FROM user WHERE role = #{role} ORDER BY create_time DESC
+    </select>
+    
+    <!-- 统计用户性别数据 -->
+    <select id="countUserGenderData" resultType="java.util.Map">
+        SELECT 
+            gender as name,
+            COUNT(*) as value
+        FROM user 
+        WHERE gender IS NOT NULL AND gender != ''
+        GROUP BY gender
+        ORDER BY value DESC
+    </select>
+    
+    <!-- 获取用户数量统计 -->
+    <select id="getUserCountData" resultType="java.util.Map">
+        SELECT
+            COUNT(*) as totalUsers,
+            SUM(CASE WHEN DATE(create_time) = CURDATE() THEN 1 ELSE 0 END) as todayNewUsers,
+            SUM(CASE WHEN DATE(create_time) = DATE_SUB(CURDATE(), INTERVAL 7 DAY) THEN 1 ELSE 0 END) as weekNewUsers,
+            SUM(CASE WHEN DATE(create_time) = DATE_SUB(CURDATE(), INTERVAL 30 DAY) THEN 1 ELSE 0 END) as monthNewUsers,
+            SUM(CASE WHEN status = 'deleted' OR status = 'inactive' THEN 1 ELSE 0 END) as deletedUsers
+        FROM user
+    </select>
+    
+    <!-- 获取新增用户统计 -->
+    <select id="getNewUserData" resultType="java.util.Map">
+        SELECT
+            SUM(CASE WHEN DATE(create_time) = CURDATE() THEN 1 ELSE 0 END) as todayNewUsers,
+            SUM(CASE WHEN DATE(create_time) = DATE_SUB(CURDATE(), INTERVAL 1 DAY) THEN 1 ELSE 0 END) as yesterdayNewUsers,
+            SUM(CASE WHEN DATE(create_time) = DATE_SUB(CURDATE(), INTERVAL 7 DAY) THEN 1 ELSE 0 END) as weekNewUsers,
+            SUM(CASE WHEN DATE(create_time) = DATE_SUB(CURDATE(), INTERVAL 30 DAY) THEN 1 ELSE 0 END) as monthNewUsers,
+            SUM(CASE WHEN DATE(create_time) = DATE_SUB(CURDATE(), INTERVAL 90 DAY) THEN 1 ELSE 0 END) as quarterNewUsers,
+            SUM(CASE WHEN DATE(create_time) = DATE_SUB(CURDATE(), INTERVAL 365 DAY) THEN 1 ELSE 0 END) as yearNewUsers,
+            SUM(CASE WHEN DATE(create_time) >= DATE_SUB(CURDATE(), INTERVAL 7 DAY) THEN 1 ELSE 0 END) as last7DaysTotal,
+            SUM(CASE WHEN DATE(create_time) >= DATE_SUB(CURDATE(), INTERVAL 30 DAY) THEN 1 ELSE 0 END) as last30DaysTotal,
+            SUM(CASE WHEN DATE(create_time) >= DATE_SUB(CURDATE(), INTERVAL 90 DAY) THEN 1 ELSE 0 END) as last90DaysTotal,
+            SUM(CASE WHEN DATE(create_time) >= DATE_SUB(CURDATE(), INTERVAL 365 DAY) THEN 1 ELSE 0 END) as lastYearTotal
+        FROM user
+        WHERE create_time IS NOT NULL
+    </select>
+
+</mapper>
