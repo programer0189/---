@@ -1,9 +1,8 @@
-# Smart Campus - 智能校园管理系统
+Smart Campus - 校智通
 
-## 📝 项目简介
-Smart Campus是一个完整的智能校园管理系统，包含前后端分离架构，提供PC端和移动端访问，集成了校园信息管理、社交论坛、导航、帖子管理等功能。
+ 项目简介
+校智通是一个完整的智能校园管理系统，包含前后端分离架构，提供PC端和移动端访问，集成了校园信息管理、社交论坛、导航、帖子管理等功能。
 
-## 🏗️ 项目结构
 
 ```
 Smart_Campus/
@@ -183,21 +182,21 @@ mvn spring-boot:run
 
 ### 4. 启动前端项目
 
-#### PC端前端（端口：98/自动）
+PC端前端（端口：98/自动）
 ```bash
 cd vue-myproject-pc/vue-myproject-pc/vue-tlias-management
 npm install
 npm run dev
 ```
 
-#### 移动端前端（端口：99/自动）
+ 移动端前端（端口：99/自动）
 ```bash
 cd vue-project3-mobile/vue-position-management
 npm install
 npm run dev
 ```
 
-## 🌐 访问地址
+ 访问地址
 
 开发环境：
 - PC端前台：`http://localhost:5173`（或Vite分配的端口）
@@ -209,130 +208,5 @@ npm run dev
 - PC端：`http://your-server-ip:98`
 - 移动端：`http://your-server-ip:99`
 
-## 📊 数据库表设计
 
-主要数据表：
-- `user` - 用户表
-- `dept` - 部门表
-- `emp` - 员工表
-- `posts` - 帖子表
-- `comments` - 评论表
-- `likes` - 点赞表
-- `sys_log` - 系统日志表
-- `click_count` - 点击统计表
-
-详细的数据库脚本请参考各服务目录下的 `*.sql` 文件。
-
-## 🔐 API接口
-
-### 主后端服务（9090）
-- `/login` - 用户登录
-- `/users/**` - 用户管理
-- `/depts/**` - 部门管理
-- `/emps/**` - 员工管理
-- `/upload` - 文件上传
-- `/sys-logs/**` - 系统日志
-
-### 帖子管理服务（8082）
-- `/posts/**` - 帖子管理
-- `/comments/**` - 评论管理
-- `/likes/**` - 点赞管理
-
-详细API文档请参考各服务目录下的API文档文件。
-
-## 📱 部署说明
-
-### Nginx配置示例
-
-#### PC端（端口98）
-```nginx
-server {
-    listen 98;
-    server_name your-server-ip;
-    root /www/wwwroot/SmartCampus/Vue3/dist;
-    index index.html;
-
-    location /api/ {
-        proxy_pass http://localhost:9090/;
-    }
-
-    location /mobile-api/ {
-        proxy_pass http://localhost:8082/;
-    }
-
-    location / {
-        try_files $uri $uri/ /index.html;
-    }
-}
-```
-
-#### 移动端（端口99）
-```nginx
-server {
-    listen 99;
-    server_name your-server-ip;
-    root /www/wwwroot/SmartCampus/Vue3/mobile/dist;
-    index index.html;
-
-    location /api/ {
-        proxy_pass http://localhost:9090/;
-    }
-
-    location /mobile-api/ {
-        proxy_pass http://localhost:8082/;
-    }
-
-    location / {
-        try_files $uri $uri/ /index.html;
-    }
-}
-```
-
-## ⚠️ 常见问题
-
-### Maven无法识别项目
-1. 检查 `pom.xml` 文件是否正确
-2. 确保主类名与配置一致
-3. 检查Java版本是否为17+
-
-### 项目无法启动
-1. 检查数据库连接配置
-2. 确保MySQL服务正在运行
-3. 检查端口是否被占用
-4. 确保依赖已正确安装
-
-### 前端无法访问后端
-1. 检查后端服务是否启动
-2. 确认API地址配置正确
-3. 检查跨域配置
-4. 确认Nginx代理配置正确
-
-### 数据库连接失败
-1. 检查MySQL服务是否启动
-2. 验证数据库用户名和密码
-3. 确认数据库已创建
-4. 检查MySQL端口（默认3306）
-
-## 📝 开发历史
-- **v1.0.0** (2025-10)：项目初始发布
-  - 完成前后端分离架构
-  - 实现PC端和移动端双端支持
-  - 集成校园信息管理、社交论坛、导航等功能
-  - 支持帖子、评论、点赞等互动功能
-
-## 🤝 贡献
-欢迎提交Issue和Pull Request！
-
-## 📄 许可证
-本项目采用 MIT 许可证
-
-## 👥 联系方式
-- GitHub: [@programer0189](https://github.com/programer0189)
-- 项目地址: [Smart-Campus](https://github.com/programer0189/Smart-Campus)
-
-## 🙏 致谢
-感谢所有为这个项目做出贡献的开发者！
-
----
-
-**注意**：本项目中的敏感配置信息（如数据库密码、阿里云密钥等）已从代码中移除，请参考 `application.yml.example` 文件配置您自己的环境。
+本项目中的敏感配置信息（如数据库密码、阿里云密钥等）已从代码中移除
