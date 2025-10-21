@@ -1,0 +1,27 @@
+#配置数据库的连接信息
+spring:
+    datasource:
+      url: jdbc:mysql://localhost:3306/tlias
+      username: root
+      password: your_password_here  # 请修改为你的MySQL密码
+      driver-class-name: com.mysql.cj.jdbc.Driver
+
+# 阿里云OSS配置
+aliyun:
+  oss:
+    endpoint: https://oss-cn-beijing.aliyuncs.com
+    access-key-id: your_access_key_id_here  # 请修改为你的阿里云AccessKey ID
+    access-key-secret: your_access_key_secret_here  # 请修改为你的阿里云AccessKey Secret
+    bucket-name: your_bucket_name_here  # 请修改为你的OSS Bucket名称
+    region: cn-beijing
+
+mybatis:
+  configuration:
+      log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+      map-underscore-to-camel-case: true
+      mapper-locations: classpath:mapper/*.xml
+      type-aliases-package: com.webproject.pojo
+
+server:
+  port: 9090  # 修改为你想要的端口号
+

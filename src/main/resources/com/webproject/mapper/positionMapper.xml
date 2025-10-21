@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.webproject.mapper.positionMapper">
+
+
+
+<!--   更新数据-->
+<update id="updateById" parameterType="com.webproject.pojo.Map">
+    UPDATE location
+    <set>
+        <if test="name != null and name != ''">
+            name = #{name},
+        </if>
+        <if test="longitude != null">
+            longitude = #{longitude},
+        </if>
+        <if test="latitude != null">
+            latitude = #{latitude},
+        </if>
+        <if test="image != null and image != ''">
+            image = #{image},
+        </if>
+        <if test="updateTime != null">
+            update_time = #{updateTime},
+        </if>
+    </set>
+    WHERE id = #{id}
+</update>
+
+    <insert id="saveMap" parameterType="com.webproject.pojo.Map">
+            INSERT INTO location(name,longitude,latitude,image,create_time,update_time) VALUES(#{name},#{longitude},#{latitude},#{image},#{createTime},#{updateTime})
+    </insert>
+
+
+
+<!--   批量删除-->
+    <delete id="DeleteByIds" parameterType="java.util.List">
+        DELETE FROM location WHERE id IN
+        <foreach item="id" collection="ids" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+<!--    分页查询-->
+    <select id="pageList" resultType="com.webproject.pojo.Map">
+        SELECT *
+        FROM location
+        <where>
+            <if test="id != null">
+                AND id = #{id}
+            </if>
+            <if test="name != null and name != ''">
+                AND name LIKE CONCAT('%', #{name}, '%')
+            </if>
+            <if test="longitude != null">
+                AND longitude = #{longitude}
+            </if>
+            <if test="latitude != null">
+                AND latitude = #{latitude}
+            </if>
+
+            <if test="createTime != null">
+                AND create_time >= #{createTime}
+            </if>
+            <if test="updateTime != null">
+                AND update_time &lt;= #{updateTime}
+            </if>
+        </where>
+        ORDER BY update_time DESC
+    </select>
+
+
+
+
+
+    <resultMap id="mapResultMap" type="com.webproject.pojo.Map">
+        <id property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="longitude" column="longitude"/>
+        <result property="latitude" column="latitude"/>
+        <result property="image" column="image"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+
+        <collection property="clickList" ofType="com.webproject.pojo.ClickCount">
+            <id property="id" column="c_id"/>
+            <result property="locationId" column="c_location_id"/>
+            <result property="clickTime" column="c_click_time"/>
+        </collection>
+    </resultMap>
+
+    <select id="getInfo" resultMap="mapResultMap">
+        SELECT m.*,
+               c.id AS c_id,
+               c.location_id AS c_location_id,
+               c.click_time AS c_click_time
+        FROM location m
+                 LEFT JOIN click_count c ON m.id = c.location_id
+        WHERE m.id = #{id}
+    </select>
+
+
+</mapper>

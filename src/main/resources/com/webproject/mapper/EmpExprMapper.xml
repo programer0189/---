@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.webproject.mapper.EmpExprMapper">
+<!--    使用动态sql来批量插入数据
+foreach：
+collection：指定集合
+item：指定集合中的元素
+separator：指定分隔符
+
+-->
+    <insert id="insertBatch">
+       insert into emp_expr(emp_id,begin,end,company,job) values
+       <foreach collection="list" item="item" separator=",">
+           (#{item.empId},#{item.begin},#{item.end},#{item.company},#{item.job})
+       </foreach>
+    </insert>
+<delete id="deleteByEmpIds">
+        DELETE FROM emp_expr WHERE emp_id IN
+        <foreach collection="empIds" item="item" separator="," open="(" close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+
+
+</mapper>

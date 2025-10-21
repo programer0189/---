@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.webproject.mapper.LikeMapper">
+
+    <!-- 新增点赞 -->
+    <insert id="insert" parameterType="com.webproject.pojo.Like">
+        INSERT INTO likes (post_id, user_id, create_time)
+        VALUES (#{postId}, #{userId}, #{createTime})
+    </insert>
+
+    <!-- 删除点赞 -->
+    <delete id="delete">
+        DELETE FROM likes WHERE post_id = #{postId} AND user_id = #{userId}
+    </delete>
+
+    <!-- 根据帖子ID和用户ID查询点赞 -->
+    <select id="getByPostIdAndUserId" resultType="com.webproject.pojo.Like">
+        SELECT * FROM likes 
+        WHERE post_id = #{postId} AND user_id = #{userId}
+    </select>
+
+    <!-- 根据帖子ID查询点赞数量 -->
+    <select id="countByPostId" resultType="java.lang.Integer">
+        SELECT COUNT(*) FROM likes WHERE post_id = #{postId}
+    </select>
+
+    <!-- 根据用户ID查询点赞数量 -->
+    <select id="countByUserId" resultType="java.lang.Integer">
+        SELECT COUNT(*) FROM likes WHERE user_id = #{userId}
+    </select>
+
+    <!-- 根据用户ID查询获得的点赞数量（用户发布的帖子被点赞的总数） -->
+    <select id="countReceivedLikesByUserId" resultType="java.lang.Integer">
+        SELECT COUNT(*) FROM likes l
+        INNER JOIN posts p ON l.post_id = p.id
+        WHERE p.user_id = #{userId}
+    </select>
+
+    <!-- 根据帖子ID查询所有点赞 -->
+    <select id="getByPostId" resultType="com.webproject.pojo.Like">
+        SELECT * FROM likes WHERE post_id = #{postId}
+    </select>
+
+</mapper>
